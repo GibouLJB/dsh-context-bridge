@@ -25,10 +25,12 @@ powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File .\install.ps1
 
 この手順は Context Bridge `0.1.1` と、依存プラグインの `dsh-chat-import@0.26.6` を対象としています。両方を同じ DSH プロファイルに導入してください。`desktop` と `web` はそれぞれ別にプラグインを管理します。
 
-| DSH 環境 | Windows での動作確認 | プロファイル |
+| 実行環境 | 移行手順を一通り確認した DeepSeek Harness のバージョン | プロファイル |
 | --- | --- | --- |
-| デスクトップ版 | DSH `0.2.2-rc.3` でインストール、スキャン、プレビューを確認 | `desktop` |
-| Web 版 | npm CLI `0.2.2-rc.1` とデスクトップ版付属 CLI `0.2.2-rc.3` でインポート、ワークスペースへの振り分け、引き継ぎ用の下書きを確認 | `web` |
+| Windows デスクトップ版 | `0.2.2-rc.1`、`0.2.2-rc.2`、`0.2.2-rc.3` | `desktop` |
+| Windows Web 版 | `0.2.1-rc.5`、`0.2.2-rc.1`、`0.2.2-rc.2`、`0.2.2-rc.3` | `web` |
+
+上記の組み合わせでは、Context Bridge `0.1.1` と `dsh-chat-import@0.26.6` を使い、テスト用の ChatGPT と Claude Code の会話をインポートし、同じワークスペースにまとめ、引き継ぎ用の下書きが入力されることを確認しました。その他の Harness バージョンおよび macOS、Linux での動作は未検証です。
 
 [GitHub Releases](https://github.com/GibouLJB/dsh-context-bridge/releases) から `dsh-context-bridge-0.1.1.tgz` を取得するか、[ソースからパッケージを作成](#ソースからパッケージを作成)します。以下の PowerShell コマンドは、パッケージを保存したフォルダーで実行してください。
 

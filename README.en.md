@@ -25,10 +25,12 @@ The script locates `dsh.cmd`, downloads the v0.1.1 package from GitHub Releases,
 
 These instructions are for Context Bridge `0.1.1` and its dependency `dsh-chat-import@0.26.6`. Install both in the same DSH profile. The `desktop` and `web` profiles manage their plugins separately.
 
-| DSH environment | Verified on Windows | Profile |
+| Environment | DeepSeek Harness versions tested end to end | Profile |
 | --- | --- | --- |
-| Desktop | DSH `0.2.2-rc.3`, including installation, scanning, and preview | `desktop` |
-| Web | npm CLI `0.2.2-rc.1` and bundled Desktop CLI `0.2.2-rc.3`, including import, workspace grouping, and resume drafts | `web` |
+| Windows Desktop | `0.2.2-rc.1`, `0.2.2-rc.2`, `0.2.2-rc.3` | `desktop` |
+| Windows Web | `0.2.1-rc.5`, `0.2.2-rc.1`, `0.2.2-rc.2`, `0.2.2-rc.3` | `web` |
+
+Each combination passed import, workspace grouping, and resume draft tests with synthetic ChatGPT and Claude Code sessions, using Context Bridge `0.1.1` and `dsh-chat-import@0.26.6`. Other Harness versions, macOS, and Linux are still untested.
 
 Get `dsh-context-bridge-0.1.1.tgz` from [GitHub Releases](https://github.com/GibouLJB/dsh-context-bridge/releases), or [build it from source](#build-the-package-from-source). The following PowerShell commands assume your current directory contains the package.
 

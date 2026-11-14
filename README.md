@@ -25,12 +25,14 @@ powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File .\install.ps1
 
 ### 兼容性与安装包
 
-| 运行方式 | 本版验证环境 | 安装目标 |
+| 运行环境 | 已通过完整迁移测试的 DeepSeek Harness 版本 | 安装目标 |
 | --- | --- | --- |
-| DeepSeek Harness 桌面端 | Windows，DSH `0.2.2-rc.3`，已验证安装、扫描和预览 | `desktop` |
-| DeepSeek Harness Web | Windows，npm CLI `0.2.2-rc.1` 和桌面内置 CLI `0.2.2-rc.3`，已验证导入、工作区归组和续接草稿 | `web` |
+| Windows 桌面端 | `0.2.2-rc.1`、`0.2.2-rc.2`、`0.2.2-rc.3` | `desktop` |
+| Windows Web 端 | `0.2.1-rc.5`、`0.2.2-rc.1`、`0.2.2-rc.2`、`0.2.2-rc.3` | `web` |
 
-以下命令以 Context Bridge `0.1.1` 和依赖 `dsh-chat-import@0.26.6` 为准。每个 profile 独立安装和启用插件。macOS、Linux 和其他 DSH 版本尚未完成兼容性验证。
+上述组合均使用 Context Bridge `0.1.1` 和 `dsh-chat-import@0.26.6`，验证了合成 ChatGPT 和 Claude Code 会话的导入、工作区归组和续接草稿。其他 Harness 版本及 macOS、Linux 有待验证。
+
+每个 profile 独立安装和启用插件。
 
 如果本仓库的 **Releases** 提供 `dsh-context-bridge-0.1.1.tgz`，下载后直接用该文件安装。手头只有仓库源码时，可以按[从源码打包](#从源码打包)生成同名文件。
 
