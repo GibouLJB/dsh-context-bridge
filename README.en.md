@@ -1,6 +1,6 @@
 # DSH Context Bridge
 
-[简体中文](README.md) · [日本語](README.ja.md)
+[简体中文](README.md) · [日本語](README.ja.md) · [繁體中文](README.zh-TW.md)
 
 DSH Context Bridge imports selected ChatGPT and Claude Code conversations into a DeepSeek Harness (DSH) workspace. Choose an existing project directory, review the matching conversations and a handoff summary, then open the imported conversations or continue from a draft in the project workspace.
 

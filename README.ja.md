@@ -1,6 +1,6 @@
 # DSH Context Bridge
 
-[简体中文](README.md) · [English](README.en.md)
+[简体中文](README.md) · [English](README.en.md) · [繁體中文](README.zh-TW.md)
 
 DSH Context Bridge は、選択した ChatGPT と Claude Code の会話を DeepSeek Harness（DSH）のワークスペースに取り込むプラグインです。既存のプロジェクトフォルダーを指定し、関連する会話と引き継ぎ要約を確認できます。取り込んだ会話を開くか、プロジェクト用の下書きから作業を再開できます。
 
