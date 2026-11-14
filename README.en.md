@@ -8,6 +8,21 @@ DSH Context Bridge imports selected ChatGPT and Claude Code conversations into a
 
 ## Installation
 
+### Automated installation on Windows
+
+Download [install.ps1](install.ps1) and open PowerShell in the folder where you saved it. If this is your first time using DeepSeek Harness Desktop, open it once to initialize its profile, then quit it from the app menu or system tray.
+
+```powershell
+Unblock-File -LiteralPath .\install.ps1
+powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File .\install.ps1
+```
+
+The script locates `dsh.cmd`, downloads the v0.1.1 package from GitHub Releases, verifies its SHA-256 hash, and installs Context Bridge with `dsh-chat-import@0.26.6` in the `desktop` profile. Reopen DeepSeek Harness when it finishes. Review the script before unblocking the downloaded file. The `RemoteSigned` option applies to this PowerShell process.
+
+- **Web.** Add `-Profile web` to the installation command, then restart DSH Web.
+- **Custom DSH location.** Pass the full path to `dsh.cmd` with `-DshCliPath`.
+- **Already downloaded the package.** Put the official `.tgz` next to the script or pass its path with `-PackagePath`. DSH still installs the dependency.
+
 These instructions are for Context Bridge `0.1.1` and its dependency `dsh-chat-import@0.26.6`. Install both in the same DSH profile. The `desktop` and `web` profiles manage their plugins separately.
 
 | DSH environment | Verified on Windows | Profile |

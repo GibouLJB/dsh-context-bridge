@@ -8,6 +8,21 @@ DSH Context Bridge 把 ChatGPT 和 Claude Code 的历史会话导入 DeepSeek Ha
 
 ## 安装
 
+### Windows 自动安装
+
+从仓库下载 [install.ps1](install.ps1)，然后在 PowerShell 中进入脚本所在目录。首次使用桌面端时，先启动一次 DeepSeek Harness，再从应用菜单或系统托盘完全退出。
+
+```powershell
+Unblock-File -LiteralPath .\install.ps1
+powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File .\install.ps1
+```
+
+脚本会查找 `dsh.cmd`，下载并校验 v0.1.1 的安装包，然后将插件和 `dsh-chat-import@0.26.6` 装入 `desktop` profile。安装完成后重新打开应用。请先检查脚本内容，再解除该文件的下载标记。`RemoteSigned` 仅用于本次 PowerShell 进程。
+
+- **Web 版** 在安装命令末尾加 `-Profile web`，完成后重启 Web 服务。
+- **自定义安装位置** 使用 `-DshCliPath` 指定 `dsh.cmd` 的完整路径。
+- **已有安装包** 把官方 `.tgz` 放在脚本旁，或通过 `-PackagePath` 指定文件。依赖仍由 DSH 安装。
+
 ### 兼容性与安装包
 
 | 运行方式 | 本版验证环境 | 安装目标 |
