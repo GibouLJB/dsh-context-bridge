@@ -1,5 +1,7 @@
 # DSH Context Bridge
 
+[English](README.en.md)
+
 DSH Context Bridge 把 ChatGPT 和 Claude Code 的历史会话导入 DeepSeek Harness（DSH）。选好本地项目和相关会话后，插件会生成一份带出处的交接摘要，并把所选会话归入 DSH 工作区。打开项目交接会话后，可以从已填好的草稿接着做。
 
 [安装](#安装) · [准备会话与文件](#准备会话与文件) · [迁移项目](#迁移项目) · [排查问题](#排查问题) · [更新与卸载](#更新与卸载)
