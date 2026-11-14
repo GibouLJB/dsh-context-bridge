@@ -17,22 +17,22 @@ Unblock-File -LiteralPath .\install.ps1
 powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File .\install.ps1
 ```
 
-The script locates `dsh.cmd`, downloads the v0.1.1 package from GitHub Releases, verifies its SHA-256 hash, and installs Context Bridge with `dsh-chat-import@0.26.6` in the `desktop` profile. Reopen DeepSeek Harness when it finishes. Review the script before unblocking the downloaded file. The `RemoteSigned` option applies to this PowerShell process.
+The script locates `dsh.cmd`, downloads the v0.1.2 package from GitHub Releases, verifies its SHA-256 hash, and installs Context Bridge with `dsh-chat-import@0.26.6` in the `desktop` profile. Reopen DeepSeek Harness when it finishes. Review the script before unblocking the downloaded file. The `RemoteSigned` option applies to this PowerShell process.
 
 - **Web.** Add `-Profile web` to the installation command, then restart DSH Web.
 - **Custom DSH location.** Pass the full path to `dsh.cmd` with `-DshCliPath`.
 - **Already downloaded the package.** Put the official `.tgz` next to the script or pass its path with `-PackagePath`. DSH still installs the dependency.
 
-These instructions are for Context Bridge `0.1.1` and its dependency `dsh-chat-import@0.26.6`. Install both in the same DSH profile. The `desktop` and `web` profiles manage their plugins separately.
+These instructions are for Context Bridge `0.1.2` and its dependency `dsh-chat-import@0.26.6`. Install both in the same DSH profile. The `desktop` and `web` profiles manage their plugins separately.
 
 | Environment | DeepSeek Harness versions tested end to end | Profile |
 | --- | --- | --- |
 | Windows Desktop | `0.2.2-rc.1`, `0.2.2-rc.2`, `0.2.2-rc.3` | `desktop` |
 | Windows Web | `0.2.1-rc.5`, `0.2.2-rc.1`, `0.2.2-rc.2`, `0.2.2-rc.3` | `web` |
 
-Each combination passed import, workspace grouping, and resume draft tests with synthetic ChatGPT and Claude Code sessions, using Context Bridge `0.1.1` and `dsh-chat-import@0.26.6`. Other Harness versions, macOS, and Linux are still untested.
+Each combination passed import, workspace grouping, and resume draft tests with synthetic ChatGPT and Claude Code sessions, using Context Bridge `0.1.2` and `dsh-chat-import@0.26.6`. Other Harness versions, macOS, and Linux are still untested.
 
-Get `dsh-context-bridge-0.1.1.tgz` from [GitHub Releases](https://github.com/GibouLJB/dsh-context-bridge/releases), or [build it from source](#build-the-package-from-source). The following PowerShell commands assume your current directory contains the package.
+Get `dsh-context-bridge-0.1.2.tgz` from [GitHub Releases](https://github.com/GibouLJB/dsh-context-bridge/releases), or [build it from source](#build-the-package-from-source). The following PowerShell commands assume your current directory contains the package.
 
 ### Windows Desktop
 
@@ -42,7 +42,7 @@ Get `dsh-context-bridge-0.1.1.tgz` from [GitHub Releases](https://github.com/Gib
 
 ```powershell
 $dshCli = Join-Path $env:LOCALAPPDATA 'Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd'
-$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.1.tgz').Path.Replace('\', '/')
+$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz').Path.Replace('\', '/')
 
 & $dshCli --version
 & $dshCli plugin --profile desktop add 'dsh-chat-import@0.26.6' "file:$packagePath"
@@ -56,7 +56,7 @@ On Windows, you can also use the CLI bundled with Desktop to install and start t
 
 ```powershell
 $dshCli = Join-Path $env:LOCALAPPDATA 'Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd'
-$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.1.tgz').Path.Replace('\', '/')
+$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz').Path.Replace('\', '/')
 
 & $dshCli plugin --profile web add 'dsh-chat-import@0.26.6' "file:$packagePath"
 & $dshCli web
@@ -65,7 +65,7 @@ $packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.1.tgz').Path
 For the npm CLI, DSH `0.2.2-rc.1` requires Node.js `24.9.0` or later. Check that `pnpm --version` works before installing the plugins. [DeepSeek Harness Web setup](https://github.com/deepseek-ai/deepseek-harness#run-from-npm)
 
 ```powershell
-$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.1.tgz').Path.Replace('\', '/')
+$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz').Path.Replace('\', '/')
 
 npx.cmd --yes '@deepseek-ai/dsh@0.2.2-rc.1' plugin --profile web add 'dsh-chat-import@0.26.6' "file:$packagePath"
 npx.cmd --yes '@deepseek-ai/dsh@0.2.2-rc.1' web
@@ -75,17 +75,19 @@ If DSH Web is already running, stop it before restarting. Open the address print
 
 ### Build the package from source
 
-Run `npm.cmd pack` in the repository root on Windows, or `npm pack` on macOS or Linux. For the `v0.1.1` source, this produces `dsh-context-bridge-0.1.1.tgz`. The compatibility checks above cover Windows.
+Run `npm.cmd pack` in the repository root on Windows, or `npm pack` on macOS or Linux. For the `v0.1.2` source, this produces `dsh-context-bridge-0.1.2.tgz`. The compatibility checks above cover Windows.
 
 ## Prepare your files
 
-- **ChatGPT.** Request an export under **Settings → Data Controls → Export Data** if you need a copy of your history. Unzip the download and locate `conversations.json` or a numbered conversation JSON file. The plugin accepts one JSON file per scan. Use separate batches for a split export. [OpenAI data export guide](https://help.openai.com/en/articles/7260999-exporting-your-chatgpt-history-and-data)
+- **ChatGPT.** Export your history from **Settings → Data Controls → Export Data**. Enter the ZIP’s absolute path on the DSH host in **ChatGPT 导出文件**. The plugin reads `conversations.json` and numbered conversation JSON files in the ZIP, up to 256 MiB total uncompressed. A standalone conversation JSON file also works. [OpenAI data export guide](https://help.openai.com/en/articles/7260999-exporting-your-chatgpt-history-and-data)
+
+Path errors are shown next to the relevant project, ChatGPT, Claude Code, or additional files field.
 - **Claude Code.** Enable **扫描 Claude Code** (Scan Claude Code). Leave the source field blank to scan the default session directory, usually `%USERPROFILE%\.claude\projects` on Windows or `~/.claude/projects` on macOS and Linux. To narrow the scan, supply the absolute path to a project log directory or a main session `.jsonl` file. [dsh-chat-import usage](https://github.com/Nwflower/dsh-chat-import/blob/main/docs/USAGE.md)
 - **Project directory.** Choose the existing directory where you want to resume work. DSH uses it as the workspace root, so files stay in place. For a remote Web instance, provide paths on the DSH host and make sure its account can read them.
 
 ## Import and resume
 
-The plugin interface in v0.1.1 uses Chinese labels. The English translations below show which controls to use.
+The plugin interface in v0.1.2 uses Chinese labels. The English translations below show which controls to use.
 
 1. Open **项目迁移** (Project Migration) and fill in **本地项目目录** (Local Project Directory). Add one or both conversation sources. You can enter comma-separated **项目关键词** (Project Keywords), such as `task list, search`, and add project files under **补充项目文件** (Additional Project Files), one project-relative path per line.
 2. Click **扫描会话** (Scan Conversations). The plugin suggests matches using working directories, project names, titles, and keywords. Review the suggestions and select 1–12 conversations. You can also search for conversations that were not selected automatically.
@@ -111,7 +113,7 @@ Scanning, previewing, importing, and filling the draft run on the DSH host witho
 | Desktop profile is missing or busy | Launch Desktop once and quit it explicitly before installing. |
 | The migration button is missing | Check that both plugins are enabled in the running profile, then restart Desktop or Web. |
 | pnpm reports peer dependency warnings | Check the install exit status and whether both plugins load in DSH. Include the exact versions and startup error if reporting a failure. |
-| ChatGPT JSON is rejected or returns no conversations | Use an extracted conversation JSON file with a top-level array. Check the per-file size limit and whether the file is readable from the DSH host. |
+| ChatGPT export cannot be read or returns no conversations | Check that the ZIP contains conversation JSON, or that the selected JSON has a top-level conversation array. Check read permissions and the size limit. |
 | Claude Code scan finds no sessions | Enter a specific session directory or main `.jsonl` path. For WSL, containers, or another machine, make the logs readable from the DSH host. |
 | The source changed or the preview expired | Let the source finish writing, then scan or preview again as prompted. |
 | The conversation opens without a summary draft | Check for an existing draft or an active send. Use **复制摘要** (Copy Summary) to paste it manually. |

@@ -17,7 +17,7 @@ Unblock-File -LiteralPath .\install.ps1
 powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File .\install.ps1
 ```
 
-脚本会查找 `dsh.cmd`，下载并校验 v0.1.1 的安装包，然后将插件和 `dsh-chat-import@0.26.6` 装入 `desktop` profile。安装完成后重新打开应用。请先检查脚本内容，再解除该文件的下载标记。`RemoteSigned` 仅用于本次 PowerShell 进程。
+脚本会查找 `dsh.cmd`，下载并校验 v0.1.2 的安装包，然后将插件和 `dsh-chat-import@0.26.6` 装入 `desktop` profile。安装完成后重新打开应用。请先检查脚本内容，再解除该文件的下载标记。`RemoteSigned` 仅用于本次 PowerShell 进程。
 
 - **Web 版** 在安装命令末尾加 `-Profile web`，完成后重启 Web 服务。
 - **自定义安装位置** 使用 `-DshCliPath` 指定 `dsh.cmd` 的完整路径。
@@ -30,11 +30,11 @@ powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File .\install.ps1
 | Windows 桌面端 | `0.2.2-rc.1`、`0.2.2-rc.2`、`0.2.2-rc.3` | `desktop` |
 | Windows Web 端 | `0.2.1-rc.5`、`0.2.2-rc.1`、`0.2.2-rc.2`、`0.2.2-rc.3` | `web` |
 
-上述组合均使用 Context Bridge `0.1.1` 和 `dsh-chat-import@0.26.6`，验证了合成 ChatGPT 和 Claude Code 会话的导入、工作区归组和续接草稿。其他 Harness 版本及 macOS、Linux 有待验证。
+上述组合均使用 Context Bridge `0.1.2` 和 `dsh-chat-import@0.26.6`，验证了合成 ChatGPT 和 Claude Code 会话的导入、工作区归组和续接草稿。其他 Harness 版本及 macOS、Linux 有待验证。
 
 每个 profile 独立安装和启用插件。
 
-如果本仓库的 **Releases** 提供 `dsh-context-bridge-0.1.1.tgz`，下载后直接用该文件安装。手头只有仓库源码时，可以按[从源码打包](#从源码打包)生成同名文件。
+如果本仓库的 **Releases** 提供 `dsh-context-bridge-0.1.2.tgz`，下载后直接用该文件安装。手头只有仓库源码时，可以按[从源码打包](#从源码打包)生成同名文件。
 
 ### Windows 桌面端
 
@@ -45,7 +45,7 @@ powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File .\install.ps1
 ```powershell
 Set-Location "$env:USERPROFILE\Downloads"
 $dshCli = Join-Path $env:LOCALAPPDATA 'Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd'
-$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.1.tgz').Path.Replace('\', '/')
+$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz').Path.Replace('\', '/')
 
 & $dshCli --version
 & $dshCli plugin --profile desktop add 'dsh-chat-import@0.26.6' "file:$packagePath"
@@ -61,7 +61,7 @@ $packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.1.tgz').Path
 
 ```powershell
 $dshCli = Join-Path $env:LOCALAPPDATA 'Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd'
-$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.1.tgz').Path.Replace('\', '/')
+$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz').Path.Replace('\', '/')
 
 & $dshCli plugin --profile web add 'dsh-chat-import@0.26.6' "file:$packagePath"
 & $dshCli web
@@ -70,7 +70,7 @@ $packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.1.tgz').Path
 使用 npm CLI 时，DSH `0.2.2-rc.1` 要求 Node.js `24.9.0` 或更新版本，安装插件前还要确认 `pnpm --version` 能运行。Windows PowerShell 可调用 `npx.cmd`。若已有对应版本的 `dsh`，也可用它执行相同命令。以下命令同样在 `.tgz` 所在目录运行。 [DeepSeek Harness Web 启动说明](https://github.com/deepseek-ai/deepseek-harness/blob/master/README.zh.md#通过-npm-运行)
 
 ```powershell
-$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.1.tgz').Path.Replace('\', '/')
+$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz').Path.Replace('\', '/')
 
 npx.cmd --yes '@deepseek-ai/dsh@0.2.2-rc.1' plugin --profile web add 'dsh-chat-import@0.26.6' "file:$packagePath"
 npx.cmd --yes '@deepseek-ai/dsh@0.2.2-rc.1' web
@@ -86,15 +86,16 @@ npx.cmd --yes '@deepseek-ai/dsh@0.2.2-rc.1' web
 npm.cmd pack
 ```
 
-npm 会按 `package.json` 的版本生成 `dsh-context-bridge-0.1.1.tgz`。macOS 和 Linux 使用 `npm pack` 即可生成安装包。
+npm 会按 `package.json` 的版本生成 `dsh-context-bridge-0.1.2.tgz`。macOS 和 Linux 使用 `npm pack` 即可生成安装包。
 
 ## 准备会话与文件
 
 ### ChatGPT
 
 1. 在 ChatGPT 网页版进入 **设置 → 数据控制 → 导出数据**，按提示确认。能否自行导出取决于账户和工作区设置。 [OpenAI 数据导出说明](https://help.openai.com/en/articles/7260999-exporting-your-chatgpt-history-and-data)
-2. 下载并解压 ChatGPT 发来的 ZIP。在解压目录中找到 `conversations.json` 或实际包含对话数据的 JSON 文件。可以通过文件名和内容结构识别它，顶层是包含会话条目的 JSON 数组。
-3. 把单个会话 JSON 文件的绝对路径填进插件的 **ChatGPT 导出文件**。例如 `C:\Exports\chatgpt\conversations.json`。当前版本每次接收一个 JSON 文件。若导出有多份会话 JSON，按文件分批迁移。
+2. 下载 ChatGPT 发来的 ZIP，把它在 DSH 主机上的绝对路径填入 **ChatGPT 导出文件**。也可直接指定会话 JSON。ZIP 内的 `conversations.json` 和带编号的会话 JSON 会一并扫描，解压后的会话数据合计上限为 256 MiB。
+
+项目目录、导出文件、Claude Code 来源和补充文件若存在路径错误，提示会显示在对应字段旁。
 
 插件从 ChatGPT 导出中处理会话主分支。附件能否还原取决于导出文件实际包含的数据和上游导入器。项目文件若需补充，可以先放进目标项目目录，再填写相对路径。
 
@@ -161,13 +162,13 @@ npm 会按 `package.json` 的版本生成 `dsh-context-bridge-0.1.1.tgz`。macOS
 | 现象 | 处理方法 |
 | --- | --- |
 | PowerShell 提示无法识别 `dsh` | 使用[桌面端内置启动器的完整路径](#windows-桌面端)。若通过应用菜单注册了命令，要打开新的 PowerShell 窗口。 |
-| 找不到安装包或 `file:` 解析失败 | 进入实际保存 `.tgz` 的目录，先确认 `Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.1.tgz'` 能返回路径，再按安装命令传入绝对路径。 |
+| 找不到安装包或 `file:` 解析失败 | 进入实际保存 `.tgz` 的目录，先确认 `Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz'` 能返回路径，再按安装命令传入绝对路径。 |
 | Desktop profile 未初始化或仍在运行 | 首次安装先打开桌面端一次，再用 **应用 → 退出** 彻底退出。若启用了托盘后台运行，从托盘退出。 |
 | 安装完成后没有 **项目迁移** | 确认当前运行的是目标 profile，检查 **插件** 页的两项启用状态，然后重启应用或 Web 服务。 |
 | pnpm 提示 `peer dependencies` | 以安装退出状态和 DSH 中的启用结果为准。已验证的组合在安装时也可能出现这类提示。若插件未能启用，记录启动错误和两个插件的版本。 |
 | 提示安装或启用 `dsh-chat-import` | 在相同 profile 安装并启用 `dsh-chat-import@0.26.6`。同时安装两个包时，把它们写在同一条 `plugin ... add` 命令里即可。 |
 | 路径不存在或没有权限 | 检查 DSH 主机上的绝对路径，以及运行 DSH 的账户是否有读取权限。补充文件路径从项目根目录算起。 |
-| ChatGPT 文件无法读取或扫描结果为空 | 检查是否选中了会话 JSON，文件顶层是否是对话数组，以及文件大小。若账户拿不到导出，查看 OpenAI 的导出说明。 |
+| ChatGPT 文件无法读取或扫描结果为空 | 确认 ZIP 内含会话 JSON，或者所选 JSON 的顶层是会话数组。检查读取权限及大小上限。 |
 | Claude Code 找不到会话 | 用明确的日志目录或主会话 `.jsonl` 文件重新扫描。Claude Code 若运行在 WSL、容器或另一台电脑上，把日志放到 DSH 主机可读的位置。 |
 | 提示源文件变更、扫描结果或预览已过期 | 重新扫描或重新生成预览。源仍在写入时，等写入结束后再试。 |
 | 会话打开了，但摘要没填进输入框 | 检查输入框是否已有草稿或正在发送。也可以在导入结果中点 **复制摘要** 后手动粘贴。 |

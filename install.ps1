@@ -7,9 +7,9 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$packageName = 'dsh-context-bridge-0.1.1.tgz'
-$packageHash = '87885C16D0F3EDC8C0F33A90A31DDC1F1ACC0DD30767A4FDB29B691613E69947'
-$packageUrl = "https://github.com/GibouLJB/dsh-context-bridge/releases/download/v0.1.1/$packageName"
+$packageName = 'dsh-context-bridge-0.1.2.tgz'
+$packageHash = '88EE175CB511E10AF44D97613114CF75A4F9C0B610C07615E5C5ECB9F7477FA1'
+$packageUrl = "https://github.com/GibouLJB/dsh-context-bridge/releases/download/v0.1.2/$packageName"
 $bundledCli = Join-Path $env:LOCALAPPDATA 'Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd'
 
 function Test-ReleasePackage([string]$Path) {
@@ -35,7 +35,14 @@ try {
     }
 
     if ($Profile -eq 'desktop' -and (Get-Process -Name 'DeepSeek Harness' -ErrorAction SilentlyContinue)) {
-        throw 'DeepSeek Harness Desktop is running. Use App > Quit or quit from the system tray, then run this script again.'
+        # The bundled CLI uses the desktop executable even when it serves only the Web profile.
+        $processes = Get-CimInstance Win32_Process -Filter "name = 'DeepSeek Harness.exe'" -ErrorAction SilentlyContinue
+        $desktopRunning = !$processes -or ($processes | Where-Object {
+            $_.CommandLine -notmatch '(?i)[\\/]dsh-desktop-host[\\/]lib[\\/]cli\.js"?\s+web(?:\s|$)'
+        })
+        if ($desktopRunning) {
+            throw 'DeepSeek Harness Desktop is running. Use App > Quit or quit from the system tray, then run this script again.'
+        }
     }
 
     if ($PackagePath) {
@@ -44,7 +51,7 @@ try {
         $localPackage = Join-Path $PSScriptRoot $packageName
     }
     if ((Test-Path -LiteralPath $localPackage) -and -not (Test-ReleasePackage $localPackage)) {
-        throw "The local archive does not match the official v0.1.1 SHA-256: $localPackage"
+        throw "The local archive does not match the official v0.1.2 SHA-256: $localPackage"
     }
 
     # pnpm records the archive path, so keep a stable copy outside the temporary directory.
@@ -61,7 +68,7 @@ try {
                 Invoke-WebRequest -UseBasicParsing -Uri $packageUrl -OutFile $staged -TimeoutSec 60
             }
             if (-not (Test-ReleasePackage $staged)) {
-                throw 'The package failed SHA-256 verification. Download v0.1.1 again from the official release.'
+                throw 'The package failed SHA-256 verification. Download v0.1.2 again from the official release.'
             }
             Move-Item -LiteralPath $staged -Destination $cachedPackage -Force
         } finally {
@@ -70,7 +77,7 @@ try {
     }
 
     $packageSpec = 'file:' + $cachedPackage.Replace('\', '/')
-    Write-Host "Installing DSH Context Bridge v0.1.1 and dsh-chat-import@0.26.6 into '$Profile'..."
+    Write-Host "Installing DSH Context Bridge v0.1.2 and dsh-chat-import@0.26.6 into '$Profile'..."
     & $cli plugin --profile $Profile add 'dsh-chat-import@0.26.6' $packageSpec
     if ($LASTEXITCODE -ne 0) {
         throw "DSH could not install the plugins (exit code $LASTEXITCODE). See the DSH output above. For Desktop, initialize the profile by opening the app once and quitting it."
