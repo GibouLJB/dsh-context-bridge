@@ -19,13 +19,15 @@ Unblock-File -LiteralPath .\install.ps1
 powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File .\install.ps1
 ```
 
-指令碼會尋找 `dsh.cmd`、下載並驗證 v0.1.2 安裝套件的 SHA-256，接著將 Context Bridge 和 `dsh-chat-import@0.26.6` 安裝到 `desktop` 設定檔（profile）。完成後請重新開啟應用程式。
+指令碼會尋找 `dsh.cmd`、下載並驗證 v0.1.3 安裝套件的 SHA-256，接著將 Context Bridge 和 `dsh-chat-import@0.26.6` 安裝到 `desktop` 設定檔（profile）。完成後請重新開啟應用程式。
 
 - **Web 版** 在安裝指令末尾加上 `-Profile web`，完成後重新啟動 Web 服務。
 - **自訂安裝位置** 使用 `-DshCliPath` 指定 `dsh.cmd` 的完整路徑。
 - **已有安裝套件** 將官方 `.tgz` 放在指令碼所在的資料夾，或用 `-PackagePath` 指定檔案。相依套件仍由 DSH 安裝。
 
 ### 相容性與安裝套件
+
+v0.1.3 已在 Windows 原生桌面版 Harness 0.2.2-rc.3 驗證完整遷移，並確認同版本 Web 設定檔可安裝。下表記錄 v0.1.2 的完整遷移測試。
 
 | 執行環境 | 已通過完整遷移測試的 DeepSeek Harness 版本 | 設定檔 |
 | --- | --- | --- |
@@ -34,7 +36,7 @@ powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File .\install.ps1
 
 上述組合皆使用 Context Bridge `0.1.2` 和 `dsh-chat-import@0.26.6`，以測試用的 ChatGPT 和 Claude Code 對話驗證匯入、工作區歸類和接續草稿。其他 Harness 版本、macOS 和 Linux 尚待驗證。
 
-各設定檔分別安裝及啟用外掛。可從 [GitHub Releases](https://github.com/GibouLJB/dsh-context-bridge/releases/tag/v0.1.2) 下載 `dsh-context-bridge-0.1.2.tgz`，也可[從原始碼打包](#從原始碼打包)。
+各設定檔分別安裝及啟用外掛。可從 [GitHub Releases](https://github.com/GibouLJB/dsh-context-bridge/releases/tag/v0.1.3) 下載 `dsh-context-bridge-0.1.3.tgz`，也可[從原始碼打包](#從原始碼打包)。
 
 ### Windows 桌面版
 
@@ -45,7 +47,7 @@ powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File .\install.ps1
 ```powershell
 Set-Location "$env:USERPROFILE\Downloads"
 $dshCli = Join-Path $env:LOCALAPPDATA 'Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd'
-$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz').Path.Replace('\', '/')
+$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.3.tgz').Path.Replace('\', '/')
 
 & $dshCli --version
 & $dshCli plugin --profile desktop add 'dsh-chat-import@0.26.6' "file:$packagePath"
@@ -61,7 +63,7 @@ $packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz').Path
 
 ```powershell
 $dshCli = Join-Path $env:LOCALAPPDATA 'Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd'
-$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz').Path.Replace('\', '/')
+$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.3.tgz').Path.Replace('\', '/')
 
 & $dshCli plugin --profile web add 'dsh-chat-import@0.26.6' "file:$packagePath"
 & $dshCli web
@@ -70,7 +72,7 @@ $packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz').Path
 如果使用 npm CLI，DSH `0.2.2-rc.1` 需要 Node.js `24.9.0` 或更新版本。安裝外掛前，請確認 `pnpm --version` 能正常執行。請在 `.tgz` 所在的資料夾執行下列指令。 [DeepSeek Harness Web 版啟動說明](https://github.com/deepseek-ai/deepseek-harness/blob/master/README.zh.md#通过-npm-运行)
 
 ```powershell
-$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz').Path.Replace('\', '/')
+$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.3.tgz').Path.Replace('\', '/')
 
 npx.cmd --yes '@deepseek-ai/dsh@0.2.2-rc.1' plugin --profile web add 'dsh-chat-import@0.26.6' "file:$packagePath"
 npx.cmd --yes '@deepseek-ai/dsh@0.2.2-rc.1' web
@@ -86,7 +88,7 @@ npx.cmd --yes '@deepseek-ai/dsh@0.2.2-rc.1' web
 npm.cmd pack
 ```
 
-使用 `v0.1.2` 原始碼會產生 `dsh-context-bridge-0.1.2.tgz`。macOS 和 Linux 可用 `npm pack` 打包。
+使用 `v0.1.3` 原始碼會產生 `dsh-context-bridge-0.1.3.tgz`。macOS 和 Linux 可用 `npm pack` 打包。
 
 ## 準備對話與檔案
 
@@ -114,6 +116,8 @@ npm.cmd pack
 若使用遠端 Web 執行個體，請先將要匯入的檔案放在**執行 DSH 的主機**上，再填入該主機上的專案與檔案路徑。執行 DSH 的帳號需要有讀取權限。
 
 ## 遷移專案
+
+在側欄的工作區按右鍵並選擇「项目迁移」，即可自動填入目錄。也可從全域遷移入口選擇既有工作區。Windows 桌面版可點選「瀏覽…」選取 ChatGPT ZIP 或 JSON。Web 版請填入 DSH 主機上的絕對路徑。
 
 ### 1. 掃描並選取對話
 
@@ -162,7 +166,7 @@ npm.cmd pack
 | 狀況 | 處理方法 |
 | --- | --- |
 | PowerShell 無法辨識 `dsh` | 使用[桌面版隨附啟動程式的完整路徑](#windows-桌面版)。若已從應用程式選單註冊指令，請開啟新的 PowerShell 視窗。 |
-| 找不到安裝套件，或無法解析 `file:` | 進入 `.tgz` 所在的資料夾，確認 `Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz'` 能取得路徑，再將絕對路徑傳給安裝指令。 |
+| 找不到安裝套件，或無法解析 `file:` | 進入 `.tgz` 所在的資料夾，確認 `Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.3.tgz'` 能取得路徑，再將絕對路徑傳給安裝指令。 |
 | `desktop` 設定檔尚未初始化，或桌面版仍在執行 | 首次安裝時，先啟動桌面版一次，再從應用程式選單或系統匣完全結束程式。 |
 | 安裝完成後看不到 **项目迁移** | 確認目前使用的是目標設定檔，並在 **插件** 頁面確認兩個外掛都已啟用，再重新啟動應用程式或 Web 服務。 |
 | pnpm 顯示 `peer dependencies` 提示 | 檢查安裝指令的結束狀態和 DSH 中的外掛啟用結果。已驗證的組合也可能出現此提示。若外掛無法啟用，請記錄啟動錯誤與兩個外掛的版本。 |

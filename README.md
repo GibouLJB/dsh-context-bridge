@@ -17,13 +17,15 @@ Unblock-File -LiteralPath .\install.ps1
 powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File .\install.ps1
 ```
 
-脚本会查找 `dsh.cmd`，下载并校验 v0.1.2 的安装包，然后将插件和 `dsh-chat-import@0.26.6` 装入 `desktop` profile。安装完成后重新打开应用。请先检查脚本内容，再解除该文件的下载标记。`RemoteSigned` 仅用于本次 PowerShell 进程。
+脚本会查找 `dsh.cmd`，下载并校验 v0.1.3 的安装包，然后将插件和 `dsh-chat-import@0.26.6` 装入 `desktop` profile。安装完成后重新打开应用。请先检查脚本内容，再解除该文件的下载标记。`RemoteSigned` 仅用于本次 PowerShell 进程。
 
 - **Web 版** 在安装命令末尾加 `-Profile web`，完成后重启 Web 服务。
 - **自定义安装位置** 使用 `-DshCliPath` 指定 `dsh.cmd` 的完整路径。
 - **已有安装包** 把官方 `.tgz` 放在脚本旁，或通过 `-PackagePath` 指定文件。依赖仍由 DSH 安装。
 
 ### 兼容性与安装包
+
+v0.1.3 在 Windows 原生桌面版 Harness 0.2.2-rc.3 上完成迁移测试，并验证了同版本 Web profile 的安装。下表记录 v0.1.2 的完整迁移测试。
 
 | 运行环境 | 已通过完整迁移测试的 DeepSeek Harness 版本 | 安装目标 |
 | --- | --- | --- |
@@ -34,7 +36,7 @@ powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File .\install.ps1
 
 每个 profile 独立安装和启用插件。
 
-如果本仓库的 **Releases** 提供 `dsh-context-bridge-0.1.2.tgz`，下载后直接用该文件安装。手头只有仓库源码时，可以按[从源码打包](#从源码打包)生成同名文件。
+如果本仓库的 **Releases** 提供 `dsh-context-bridge-0.1.3.tgz`，下载后直接用该文件安装。手头只有仓库源码时，可以按[从源码打包](#从源码打包)生成同名文件。
 
 ### Windows 桌面端
 
@@ -45,7 +47,7 @@ powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File .\install.ps1
 ```powershell
 Set-Location "$env:USERPROFILE\Downloads"
 $dshCli = Join-Path $env:LOCALAPPDATA 'Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd'
-$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz').Path.Replace('\', '/')
+$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.3.tgz').Path.Replace('\', '/')
 
 & $dshCli --version
 & $dshCli plugin --profile desktop add 'dsh-chat-import@0.26.6' "file:$packagePath"
@@ -61,7 +63,7 @@ $packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz').Path
 
 ```powershell
 $dshCli = Join-Path $env:LOCALAPPDATA 'Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd'
-$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz').Path.Replace('\', '/')
+$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.3.tgz').Path.Replace('\', '/')
 
 & $dshCli plugin --profile web add 'dsh-chat-import@0.26.6' "file:$packagePath"
 & $dshCli web
@@ -70,7 +72,7 @@ $packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz').Path
 使用 npm CLI 时，DSH `0.2.2-rc.1` 要求 Node.js `24.9.0` 或更新版本，安装插件前还要确认 `pnpm --version` 能运行。Windows PowerShell 可调用 `npx.cmd`。若已有对应版本的 `dsh`，也可用它执行相同命令。以下命令同样在 `.tgz` 所在目录运行。 [DeepSeek Harness Web 启动说明](https://github.com/deepseek-ai/deepseek-harness/blob/master/README.zh.md#通过-npm-运行)
 
 ```powershell
-$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz').Path.Replace('\', '/')
+$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.3.tgz').Path.Replace('\', '/')
 
 npx.cmd --yes '@deepseek-ai/dsh@0.2.2-rc.1' plugin --profile web add 'dsh-chat-import@0.26.6' "file:$packagePath"
 npx.cmd --yes '@deepseek-ai/dsh@0.2.2-rc.1' web
@@ -86,7 +88,7 @@ npx.cmd --yes '@deepseek-ai/dsh@0.2.2-rc.1' web
 npm.cmd pack
 ```
 
-npm 会按 `package.json` 的版本生成 `dsh-context-bridge-0.1.2.tgz`。macOS 和 Linux 使用 `npm pack` 即可生成安装包。
+npm 会按 `package.json` 的版本生成 `dsh-context-bridge-0.1.3.tgz`。macOS 和 Linux 使用 `npm pack` 即可生成安装包。
 
 ## 准备会话与文件
 
@@ -112,6 +114,8 @@ npm 会按 `package.json` 的版本生成 `dsh-context-bridge-0.1.2.tgz`。macOS
 使用远程 Web 实例时，先把要导入的文件放到 **运行 DSH 的主机** 上，再填写该主机上的项目和文件路径。运行 DSH 的账户需要有读取权限。
 
 ## 迁移项目
+
+右键点击侧栏中的工作区，选择「项目迁移」，即可自动填入目录。也可在全局迁移入口选择已有工作区。Windows 桌面端可点击「浏览…」选择 ChatGPT ZIP 或 JSON。Web 端请填写 DSH 主机上的绝对路径。
 
 ### 1. 扫描并选择会话
 
@@ -162,7 +166,7 @@ npm 会按 `package.json` 的版本生成 `dsh-context-bridge-0.1.2.tgz`。macOS
 | 现象 | 处理方法 |
 | --- | --- |
 | PowerShell 提示无法识别 `dsh` | 使用[桌面端内置启动器的完整路径](#windows-桌面端)。若通过应用菜单注册了命令，要打开新的 PowerShell 窗口。 |
-| 找不到安装包或 `file:` 解析失败 | 进入实际保存 `.tgz` 的目录，先确认 `Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz'` 能返回路径，再按安装命令传入绝对路径。 |
+| 找不到安装包或 `file:` 解析失败 | 进入实际保存 `.tgz` 的目录，先确认 `Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.3.tgz'` 能返回路径，再按安装命令传入绝对路径。 |
 | Desktop profile 未初始化或仍在运行 | 首次安装先打开桌面端一次，再用 **应用 → 退出** 彻底退出。若启用了托盘后台运行，从托盘退出。 |
 | 安装完成后没有 **项目迁移** | 确认当前运行的是目标 profile，检查 **插件** 页的两项启用状态，然后重启应用或 Web 服务。 |
 | pnpm 提示 `peer dependencies` | 以安装退出状态和 DSH 中的启用结果为准。已验证的组合在安装时也可能出现这类提示。若插件未能启用，记录启动错误和两个插件的版本。 |

@@ -17,13 +17,15 @@ Unblock-File -LiteralPath .\install.ps1
 powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File .\install.ps1
 ```
 
-スクリプトは `dsh.cmd` を探し、GitHub Releases から v0.1.2 のパッケージをダウンロードして SHA-256 ハッシュを検証します。その後、Context Bridge と `dsh-chat-import@0.26.6` を `desktop` プロファイルにインストールします。完了後に DeepSeek Harness を起動し直してください。ダウンロードしたファイルのブロックを解除する前に、スクリプトの内容を確認してください。`RemoteSigned` はこの PowerShell プロセスにだけ適用されます。
+スクリプトは `dsh.cmd` を探し、GitHub Releases から v0.1.3 のパッケージをダウンロードして SHA-256 ハッシュを検証します。その後、Context Bridge と `dsh-chat-import@0.26.6` を `desktop` プロファイルにインストールします。完了後に DeepSeek Harness を起動し直してください。ダウンロードしたファイルのブロックを解除する前に、スクリプトの内容を確認してください。`RemoteSigned` はこの PowerShell プロセスにだけ適用されます。
 
 - **Web 版**。インストールコマンドの末尾に `-Profile web` を付け、完了後に DSH Web を再起動します。
 - **DSH を別の場所にインストールした場合**。`-DshCliPath` に `dsh.cmd` のフルパスを指定します。
 - **パッケージをダウンロード済みの場合**。公式の `.tgz` をスクリプトと同じフォルダーに置くか、`-PackagePath` で指定します。依存プラグインのインストールは DSH が行います。
 
-この手順は Context Bridge `0.1.2` と、依存プラグインの `dsh-chat-import@0.26.6` を対象としています。両方を同じ DSH プロファイルに導入してください。`desktop` と `web` はそれぞれ別にプラグインを管理します。
+この手順は Context Bridge `0.1.3` と、依存プラグインの `dsh-chat-import@0.26.6` を対象としています。両方を同じ DSH プロファイルに導入してください。`desktop` と `web` はそれぞれ別にプラグインを管理します。
+
+v0.1.3 は Windows デスクトップ版 Harness 0.2.2-rc.3 で移行手順を一通り確認し、同バージョンの Web プロファイルでもインストールを確認しました。下表は v0.1.2 の移行テスト結果です。
 
 | 実行環境 | 移行手順を一通り確認した DeepSeek Harness のバージョン | プロファイル |
 | --- | --- | --- |
@@ -32,7 +34,7 @@ powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File .\install.ps1
 
 上記の組み合わせでは、Context Bridge `0.1.2` と `dsh-chat-import@0.26.6` を使い、テスト用の ChatGPT と Claude Code の会話をインポートし、同じワークスペースにまとめ、引き継ぎ用の下書きが入力されることを確認しました。その他の Harness バージョンおよび macOS、Linux での動作は未検証です。
 
-[GitHub Releases](https://github.com/GibouLJB/dsh-context-bridge/releases) から `dsh-context-bridge-0.1.2.tgz` を取得するか、[ソースからパッケージを作成](#ソースからパッケージを作成)します。以下の PowerShell コマンドは、パッケージを保存したフォルダーで実行してください。
+[GitHub Releases](https://github.com/GibouLJB/dsh-context-bridge/releases) から `dsh-context-bridge-0.1.3.tgz` を取得するか、[ソースからパッケージを作成](#ソースからパッケージを作成)します。以下の PowerShell コマンドは、パッケージを保存したフォルダーで実行してください。
 
 ### Windows デスクトップ版
 
@@ -42,7 +44,7 @@ powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File .\install.ps1
 
 ```powershell
 $dshCli = Join-Path $env:LOCALAPPDATA 'Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd'
-$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz').Path.Replace('\', '/')
+$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.3.tgz').Path.Replace('\', '/')
 
 & $dshCli --version
 & $dshCli plugin --profile desktop add 'dsh-chat-import@0.26.6' "file:$packagePath"
@@ -56,7 +58,7 @@ Windows では、デスクトップ版付属の CLI で Web プロファイル�
 
 ```powershell
 $dshCli = Join-Path $env:LOCALAPPDATA 'Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd'
-$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz').Path.Replace('\', '/')
+$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.3.tgz').Path.Replace('\', '/')
 
 & $dshCli plugin --profile web add 'dsh-chat-import@0.26.6' "file:$packagePath"
 & $dshCli web
@@ -65,7 +67,7 @@ $packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz').Path
 npm 版の DSH `0.2.2-rc.1` を使う場合は Node.js `24.9.0` 以降が必要です。事前に `pnpm --version` が実行できることを確認してください。 [DeepSeek Harness Web 版の起動手順](https://github.com/deepseek-ai/deepseek-harness#run-from-npm)
 
 ```powershell
-$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz').Path.Replace('\', '/')
+$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.3.tgz').Path.Replace('\', '/')
 
 npx.cmd --yes '@deepseek-ai/dsh@0.2.2-rc.1' plugin --profile web add 'dsh-chat-import@0.26.6' "file:$packagePath"
 npx.cmd --yes '@deepseek-ai/dsh@0.2.2-rc.1' web
@@ -75,7 +77,7 @@ DSH Web がすでに動作している場合は、一度停止してから起動
 
 ### ソースからパッケージを作成
 
-リポジトリのルートで、Windows なら `npm.cmd pack`、macOS または Linux なら `npm pack` を実行します。`v0.1.2` のソースからは `dsh-context-bridge-0.1.2.tgz` が生成されます。上記の動作確認は Windows で行いました。
+リポジトリのルートで、Windows なら `npm.cmd pack`、macOS または Linux なら `npm pack` を実行します。`v0.1.3` のソースからは `dsh-context-bridge-0.1.3.tgz` が生成されます。上記の動作確認は Windows で行いました。
 
 ## ファイルの準備
 
@@ -87,7 +89,9 @@ DSH Web がすでに動作している場合は、一度停止してから起動
 
 ## インポートと作業の再開
 
-v0.1.2 のプラグイン画面は中国語表示です。以下の手順では、画面に表示される項目名と日本語訳を併記します。
+サイドバーのワークスペースを右クリックして **项目迁移**（プロジェクトの移行）を選ぶと、パスが自動入力されます。共通の移行画面でも既存のワークスペースを選べます。Windows デスクトップ版では **浏览…**（参照）から ChatGPT の ZIP または JSON を選択できます。Web 版では DSH ホスト上の絶対パスを入力します。
+
+v0.1.3 のプラグイン画面は中国語表示です。以下の手順では、画面に表示される項目名と日本語訳を併記します。
 
 1. **项目迁移**（プロジェクトの移行）を開き、**本地项目目录**（ローカルのプロジェクトフォルダー）と、ChatGPT・Claude Code のいずれか一方または両方のデータを指定します。必要に応じて **项目关键词**（プロジェクトのキーワード）にカンマ区切りで語句を入力します。**补充项目文件**（追加のプロジェクトファイル）には、プロジェクトルートからの相対パスを 1 行につき 1 件入力します。
 2. **扫描会话**（会話をスキャン）をクリックします。作業フォルダー、プロジェクト名、会話タイトル、キーワードから候補が表示されます。取り込む会話を 1〜12 件選んでください。自動で選ばれなかった会話も検索できます。

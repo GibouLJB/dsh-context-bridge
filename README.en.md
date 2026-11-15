@@ -17,13 +17,15 @@ Unblock-File -LiteralPath .\install.ps1
 powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File .\install.ps1
 ```
 
-The script locates `dsh.cmd`, downloads the v0.1.2 package from GitHub Releases, verifies its SHA-256 hash, and installs Context Bridge with `dsh-chat-import@0.26.6` in the `desktop` profile. Reopen DeepSeek Harness when it finishes. Review the script before unblocking the downloaded file. The `RemoteSigned` option applies to this PowerShell process.
+The script locates `dsh.cmd`, downloads the v0.1.3 package from GitHub Releases, verifies its SHA-256 hash, and installs Context Bridge with `dsh-chat-import@0.26.6` in the `desktop` profile. Reopen DeepSeek Harness when it finishes. Review the script before unblocking the downloaded file. The `RemoteSigned` option applies to this PowerShell process.
 
 - **Web.** Add `-Profile web` to the installation command, then restart DSH Web.
 - **Custom DSH location.** Pass the full path to `dsh.cmd` with `-DshCliPath`.
 - **Already downloaded the package.** Put the official `.tgz` next to the script or pass its path with `-PackagePath`. DSH still installs the dependency.
 
-These instructions are for Context Bridge `0.1.2` and its dependency `dsh-chat-import@0.26.6`. Install both in the same DSH profile. The `desktop` and `web` profiles manage their plugins separately.
+These instructions are for Context Bridge `0.1.3` and its dependency `dsh-chat-import@0.26.6`. Install both in the same DSH profile. The `desktop` and `web` profiles manage their plugins separately.
+
+For v0.1.3, end-to-end migration was verified on Windows Desktop Harness 0.2.2-rc.3, and installation was verified in its Web profile. The table records the v0.1.2 migration tests.
 
 | Environment | DeepSeek Harness versions tested end to end | Profile |
 | --- | --- | --- |
@@ -32,7 +34,7 @@ These instructions are for Context Bridge `0.1.2` and its dependency `dsh-chat-i
 
 Each combination passed import, workspace grouping, and resume draft tests with synthetic ChatGPT and Claude Code sessions, using Context Bridge `0.1.2` and `dsh-chat-import@0.26.6`. Other Harness versions, macOS, and Linux are still untested.
 
-Get `dsh-context-bridge-0.1.2.tgz` from [GitHub Releases](https://github.com/GibouLJB/dsh-context-bridge/releases), or [build it from source](#build-the-package-from-source). The following PowerShell commands assume your current directory contains the package.
+Get `dsh-context-bridge-0.1.3.tgz` from [GitHub Releases](https://github.com/GibouLJB/dsh-context-bridge/releases), or [build it from source](#build-the-package-from-source). The following PowerShell commands assume your current directory contains the package.
 
 ### Windows Desktop
 
@@ -42,7 +44,7 @@ Get `dsh-context-bridge-0.1.2.tgz` from [GitHub Releases](https://github.com/Gib
 
 ```powershell
 $dshCli = Join-Path $env:LOCALAPPDATA 'Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd'
-$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz').Path.Replace('\', '/')
+$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.3.tgz').Path.Replace('\', '/')
 
 & $dshCli --version
 & $dshCli plugin --profile desktop add 'dsh-chat-import@0.26.6' "file:$packagePath"
@@ -56,7 +58,7 @@ On Windows, you can also use the CLI bundled with Desktop to install and start t
 
 ```powershell
 $dshCli = Join-Path $env:LOCALAPPDATA 'Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd'
-$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz').Path.Replace('\', '/')
+$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.3.tgz').Path.Replace('\', '/')
 
 & $dshCli plugin --profile web add 'dsh-chat-import@0.26.6' "file:$packagePath"
 & $dshCli web
@@ -65,7 +67,7 @@ $packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz').Path
 For the npm CLI, DSH `0.2.2-rc.1` requires Node.js `24.9.0` or later. Check that `pnpm --version` works before installing the plugins. [DeepSeek Harness Web setup](https://github.com/deepseek-ai/deepseek-harness#run-from-npm)
 
 ```powershell
-$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.2.tgz').Path.Replace('\', '/')
+$packagePath = (Resolve-Path -LiteralPath '.\dsh-context-bridge-0.1.3.tgz').Path.Replace('\', '/')
 
 npx.cmd --yes '@deepseek-ai/dsh@0.2.2-rc.1' plugin --profile web add 'dsh-chat-import@0.26.6' "file:$packagePath"
 npx.cmd --yes '@deepseek-ai/dsh@0.2.2-rc.1' web
@@ -75,7 +77,7 @@ If DSH Web is already running, stop it before restarting. Open the address print
 
 ### Build the package from source
 
-Run `npm.cmd pack` in the repository root on Windows, or `npm pack` on macOS or Linux. For the `v0.1.2` source, this produces `dsh-context-bridge-0.1.2.tgz`. The compatibility checks above cover Windows.
+Run `npm.cmd pack` in the repository root on Windows, or `npm pack` on macOS or Linux. For the `v0.1.3` source, this produces `dsh-context-bridge-0.1.3.tgz`. The compatibility checks above cover Windows.
 
 ## Prepare your files
 
@@ -87,7 +89,9 @@ Path errors are shown next to the relevant project, ChatGPT, Claude Code, or add
 
 ## Import and resume
 
-The plugin interface in v0.1.2 uses Chinese labels. The English translations below show which controls to use.
+Right-click a workspace in the sidebar and choose **项目迁移** (Project Migration) to prefill its directory. You can also select an existing workspace from the global migration dialog. On Windows Desktop, use **浏览…** (Browse) to choose a ChatGPT ZIP or JSON file. On Web, enter its absolute path on the DSH host.
+
+The plugin interface in v0.1.3 uses Chinese labels. The English translations below show which controls to use.
 
 1. Open **项目迁移** (Project Migration) and fill in **本地项目目录** (Local Project Directory). Add one or both conversation sources. You can enter comma-separated **项目关键词** (Project Keywords), such as `task list, search`, and add project files under **补充项目文件** (Additional Project Files), one project-relative path per line.
 2. Click **扫描会话** (Scan Conversations). The plugin suggests matches using working directories, project names, titles, and keywords. Review the suggestions and select 1–12 conversations. You can also search for conversations that were not selected automatically.
